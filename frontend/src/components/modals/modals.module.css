@@ -1,0 +1,115 @@
+h2 {
+    letter-spacing: 1px;
+}
+
+#modal-background {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.25);
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#modal-container {
+    min-width: 600px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 0 3px rgb(0 0 0 / 0.1);
+}
+
+#modal-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgb(0 0 0 / 0.1);
+    padding: 1.5rem;
+}
+
+#close-btn {
+    text-align: center;
+    padding: .25rem;
+}
+
+#close-btn:hover {
+    border-radius: 100%;
+    background-color: #F7F7F7;
+}
+
+#modal-title {
+    width: 100%;
+    text-align: center;
+    padding-right: 1.5rem;
+    letter-spacing: 2px;
+}
+
+#modal-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#auth-form input {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 100%;
+    padding: 1.25rem .5rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper input:placeholder-shown + label, label {
+    position: absolute;
+    transition: 0.2s;
+    left: .5rem;
+    transform-origin: 0;
+    transform: translateY(100%);
+}
+
+.input-wrapper input:focus + label,
+.input-wrapper input:not(:placeholder-shown) + label {
+    font-size: 11px;
+    top: -10px;
+}
+
+.continue-btn {
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    background-image: radial-gradient(circle at center, #FF385C 0%, #e61e4d 27.5%, #e31c5f 40%, #d70466 57.5%, #bd1e59 75%, #bd1e59 100%);
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+#auth-form span {
+    margin-top: -1rem;
+    font-size: 12px;
+    color: red;
+}
+
+#auth-form .invalid-input {
+    outline: none;
+    border: 1px solid red;
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+#auth-form .invalid-input+label {
+    color: red;
+}
+
+@media (max-width: 950px) {
+
+    #modal-container {
+        min-width: auto;
+        width: 90%;
+    }
+}
