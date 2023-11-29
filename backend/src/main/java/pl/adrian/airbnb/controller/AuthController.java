@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pl.adrian.airbnb.dto.LoginRequest;
+import pl.adrian.airbnb.dto.LoginResponse;
 import pl.adrian.airbnb.dto.SignupRequest;
 import pl.adrian.airbnb.exception.EmailNotAvailableException;
 import pl.adrian.airbnb.service.AuthService;
@@ -24,6 +26,12 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@Valid @RequestBody SignupRequest request) {
         authService.registerUser(request);
+    }
+
+    @PreAuthorize("permitAll()")
+    @PostMapping("/login")
+    public LoginResponse authenticateUser(@Valid @RequestBody LoginRequest request) {
+        return authService.authenticateUser(request);
     }
 
     @ExceptionHandler(EmailNotAvailableException.class)

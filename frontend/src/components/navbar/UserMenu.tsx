@@ -1,10 +1,11 @@
 import styles from './navbar.module.css';
 import { IoMdMenu } from "react-icons/io";
 import { IoPersonCircle } from "react-icons/io5";
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ModalObject, { ModalType } from '../../models/Modal';
 import Modal from '../modals/Modal';
+import { AuthContext } from '../../store/auth-context';
 
 const initialModalState: ModalObject = {
     showModal: false
@@ -13,6 +14,8 @@ const initialModalState: ModalObject = {
 const UserMenu = () => {
     const [openMenu, setOpenMenu] = useState(false);
     const [modal, setModal] = useState<ModalObject>(initialModalState);
+
+    const authContext = useContext(AuthContext);
 
     function handleMenuClick() {
         setOpenMenu(prevOpenMenu => !prevOpenMenu);
@@ -33,6 +36,11 @@ const UserMenu = () => {
         handleMenuClick();
     }
 
+    function handleLogoutClick() {
+        setOpenMenu(false);
+        authContext.setAuth(null)
+    }
+
     return (
         <>
             <div id={styles["user-menu-container"]}>
@@ -45,7 +53,7 @@ const UserMenu = () => {
                         <IoPersonCircle size={30} id={styles.avatar} />
                     </div>
                 </div>
-                {openMenu &&
+                {(openMenu && !authContext.auth) &&
                     <div id={styles["open-menu"]}>
                         <div className={styles["user-menu-item"]}>
                             <button onClick={() => handleAuthClick(ModalType.SIGN_UP)}>Sign up</button>
@@ -53,8 +61,25 @@ const UserMenu = () => {
                         <div className={styles["user-menu-item"]}>
                             <button onClick={() => handleAuthClick(ModalType.LOGIN)}>Log in</button>
                         </div>
+                    </div>
+                }
+                {(openMenu && authContext.auth) &&
+                    <div id={styles["open-menu"]}>
+                        <div className={styles["user-menu-item"]}>
+                            <a>Trips</a>
+                        </div>
+                        <div className={styles["user-menu-item"]}>
+                            <a>Wishlist</a>
+                        </div>
+                        <div className={styles["user-menu-item"]}>
+                            <a>Your reservations</a>
+                        </div>
                         <div className={styles["user-menu-item"]}>
                             <a>Airbnb your home</a>
+                        </div>
+                        <hr />
+                        <div className={styles["user-menu-item"]}>
+                        <button onClick={(handleLogoutClick)}>Log out</button>
                         </div>
                     </div>
                 }

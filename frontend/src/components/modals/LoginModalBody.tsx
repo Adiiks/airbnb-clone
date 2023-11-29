@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styles from './modals.module.css';
 import { FieldValues, useForm } from 'react-hook-form';
 import axios from 'axios';
 import { backendUrl } from '../../global-proporties';
+import { AuthContext } from '../../store/auth-context';
 
-const LoginModalBody = () => {
+interface LoginModalBodyProps {
+    onClose: () => void
+}
+
+const LoginModalBody: React.FC<LoginModalBodyProps> = ({ onClose }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoginError, setIsLoginError] = useState<boolean>();
+
+    const authContext = useContext(AuthContext);
 
     const { 
         register,
@@ -16,14 +24,17 @@ const LoginModalBody = () => {
     function onSubmit(data: FieldValues) {
         setIsLoading(true);
 
-        const url = backendUrl + '/auth/register';
+        const url = backendUrl + '/auth/login';
         
         axios.post(url, data)
-        .then(() => {
-
+        .then(({ data }) => {
+            authContext.setAuth(data);
+            onClose();
         })
-        .catch(() => {
-            
+        .catch(({ response }) => {
+            if (response.status === 401) {
+                setIsLoginError(true);
+            }
         })
         .finally(() => {
             setIsLoading(false);
@@ -63,6 +74,7 @@ const LoginModalBody = () => {
                 {passwordError &&
                     <span>{passwordError + ''}</span>
                 }
+                {isLoginError && <span>Invalid credentials</span>}
                 <button className={`${styles["continue-btn"]} ${isLoading && styles["loading"]}`}>Log in</button>
             </form>
         </>

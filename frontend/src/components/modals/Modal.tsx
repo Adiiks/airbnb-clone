@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose }) => {
             break;
         }
         case ModalType.LOGIN: {
-            modalBody = <LoginModalBody  />;
+            modalBody = <LoginModalBody onClose={onClose} />;
             break;
         }
     }

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.adrian.airbnb.entity.User;
 import pl.adrian.airbnb.repository.UserRepository;
+import pl.adrian.airbnb.security.UserDetailsImpl;
 
 import java.util.ArrayList;
 
@@ -21,13 +22,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email: " + email + " not found"));
 
-        return buildUserDetailsService(user);
+        return buildUserDetails(user);
     }
 
-    private org.springframework.security.core.userdetails.User buildUserDetailsService(User user) {
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                new ArrayList<>());
+    private UserDetailsImpl buildUserDetails(User user) {
+        return UserDetailsImpl.builder()
+                .id(user.getId())
+                .password(user.getPassword())
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .build();
     }
 }

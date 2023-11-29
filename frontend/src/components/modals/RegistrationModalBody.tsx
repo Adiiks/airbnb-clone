@@ -33,10 +33,7 @@ const RegistrationModalBody: React.FC<RegistrationModalBodyProps> = ({ onClose }
 
         axios.post(url, data)
             .then(() => {
-                if (!isEmailAvailable) {
-                    setIsEmailAvailable(true);
-                    onClose();
-                }
+                onClose();
             })
             .catch(({ response }) => {
                 if (response.status === 400 && response.data.emailNotAvailable) {
