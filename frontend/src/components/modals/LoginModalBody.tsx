@@ -1,24 +1,37 @@
-import React from 'react';
+import { useState } from 'react';
 import styles from './modals.module.css';
 import { FieldValues, useForm } from 'react-hook-form';
+import axios from 'axios';
+import { backendUrl } from '../../global-proporties';
 
-interface AuthModalBodyProps {
-    isLogin: boolean
-}
+const LoginModalBody = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-const AuthModalBody: React.FC<AuthModalBodyProps> = ({ isLogin }) => {
-    const { register,
+    const { 
+        register,
         handleSubmit,
         formState: { errors }
     } = useForm();
 
     function onSubmit(data: FieldValues) {
-        //TODO
+        setIsLoading(true);
+
+        const url = backendUrl + '/auth/register';
+        
+        axios.post(url, data)
+        .then(() => {
+
+        })
+        .catch(() => {
+            
+        })
+        .finally(() => {
+            setIsLoading(false);
+        });
     }
 
     let emailError = errors.email?.message;
     let passwordError = errors.password?.message;
-    let fullNameError = errors.fullName?.message;
 
     return (
         <>
@@ -50,27 +63,10 @@ const AuthModalBody: React.FC<AuthModalBodyProps> = ({ isLogin }) => {
                 {passwordError &&
                     <span>{passwordError + ''}</span>
                 }
-                {!isLogin &&
-                    <>
-                        <div className={styles["input-wrapper"]}>
-                            <input
-                                id='name'
-                                className={fullNameError && styles["invalid-input"]}
-                                type="text"
-                                {...register("fullName", { required: "Full name is required" })}
-                                placeholder=''
-                            />
-                            <label htmlFor="name">Full Name</label>
-                        </div>
-                        {fullNameError &&
-                            <span>{fullNameError + ''}</span>
-                        }
-                    </>
-                }
-                <button className={styles["continue-btn"]}>Continue</button>
+                <button className={`${styles["continue-btn"]} ${isLoading && styles["loading"]}`}>Log in</button>
             </form>
         </>
     );
 }
 
-export default AuthModalBody;
+export default LoginModalBody;

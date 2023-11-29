@@ -1,5 +1,6 @@
 import { ModalType } from '../../models/Modal';
-import AuthModalBody from './AuthModalBody';
+import LoginModalBody from './LoginModalBody';
+import RegistrationModalBody from './RegistrationModalBody';
 import styles from './modals.module.css';
 import { IoCloseOutline } from "react-icons/io5";
 
@@ -13,11 +14,11 @@ const Modal: React.FC<ModalProps> = ({ type, onClose }) => {
 
     switch(type) {
         case ModalType.SIGN_UP: {
-            modalBody = <AuthModalBody  isLogin={false} />;
+            modalBody = <RegistrationModalBody onClose={onClose} />;
             break;
         }
         case ModalType.LOGIN: {
-            modalBody = <AuthModalBody  isLogin={true}/>;
+            modalBody = <LoginModalBody  />;
             break;
         }
     }

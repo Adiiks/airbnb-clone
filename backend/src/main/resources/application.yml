@@ -7,3 +7,11 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+server:
+  error:
+    include-message: always
+
+app:
+  jwt-secret: yMK7soq08HDR3i54yMK7soq08HDR3i54yMK7soq08HDR3i54yMK7soq08HDR3i54yMK7soq08HDR3i54
+  jwt-expiration-ms: 86400000
