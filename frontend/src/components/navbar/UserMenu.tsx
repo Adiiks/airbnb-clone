@@ -50,7 +50,13 @@ const UserMenu = () => {
                     </div>
                     <div id={styles["user-menu"]} onClick={handleMenuClick}>
                         <IoMdMenu size={20} />
-                        <IoPersonCircle size={30} id={styles.avatar} />
+                        {!authContext.auth ?
+                            <IoPersonCircle size={30} className={styles["default-user-icon"]} /> 
+                            :
+                            <div className={styles["user-icon"]}>
+                                {authContext.auth.fullName.charAt(0).toUpperCase()}
+                            </div>
+                        }
                     </div>
                 </div>
                 {(openMenu && !authContext.auth) &&
@@ -79,14 +85,14 @@ const UserMenu = () => {
                         </div>
                         <hr />
                         <div className={styles["user-menu-item"]}>
-                        <button onClick={(handleLogoutClick)}>Log out</button>
+                            <button onClick={(handleLogoutClick)}>Log out</button>
                         </div>
                     </div>
                 }
             </div>
             {modal.showModal && createPortal(
                 <Modal type={modal.type!} onClose={handleCloseModalClick} />,
-                document.body
+                document.getElementById('root')!
             )}
         </>
     );

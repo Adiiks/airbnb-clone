@@ -1,14 +1,18 @@
-import classes from './navbar.module.css';
+import styles from './navbar.module.css';
 import Logo from './Logo';
 import SearchBar from './SearchBar';
 import UserMenu from './UserMenu';
+import Categories from './Categories';
 
 const Navbar = () => {
     return (
-        <header className={classes.navbar}>
-            <Logo />
-            <SearchBar />
-            <UserMenu />
+        <header>
+            <div id={styles["main-bar"]}>
+                <Logo />
+                <SearchBar />
+                <UserMenu />
+            </div>
+            <Categories />
         </header>
     );
 }
