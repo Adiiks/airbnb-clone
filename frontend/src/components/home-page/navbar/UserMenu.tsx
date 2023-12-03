@@ -3,9 +3,10 @@ import { IoMdMenu } from "react-icons/io";
 import { IoPersonCircle } from "react-icons/io5";
 import { useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
-import ModalObject, { ModalType } from '../../models/Modal';
-import Modal from '../modals/Modal';
-import { AuthContext } from '../../store/auth-context';
+import ModalObject, { ModalType } from '../../../models/Modal';
+import Modal from '../../modals/Modal';
+import { AuthContext } from '../../../store/auth-context';
+import { Link, redirect, useNavigate } from 'react-router-dom';
 
 const initialModalState: ModalObject = {
     showModal: false
@@ -16,6 +17,7 @@ const UserMenu = () => {
     const [modal, setModal] = useState<ModalObject>(initialModalState);
 
     const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
 
     function handleMenuClick() {
         setOpenMenu(prevOpenMenu => !prevOpenMenu);
@@ -41,12 +43,23 @@ const UserMenu = () => {
         authContext.setAuth(null)
     }
 
+    function handleAirbnbYourHomeClick() {
+        if (!authContext.auth) {
+            return setModal({
+                showModal: true,
+                type: ModalType.LOGIN
+            });
+        }
+
+        navigate('/listing-creation');
+    }
+
     return (
         <>
             <div id={styles["user-menu-container"]}>
                 <div id={styles["user-menu-wrapper"]}>
                     <div id={styles["rent-home-link"]}>
-                        <a>Airbnb your home</a>
+                        <button onClick={handleAirbnbYourHomeClick}>Airbnb your home</button>
                     </div>
                     <div id={styles["user-menu"]} onClick={handleMenuClick}>
                         <IoMdMenu size={20} />
@@ -81,7 +94,7 @@ const UserMenu = () => {
                             <a>Your reservations</a>
                         </div>
                         <div className={styles["user-menu-item"]}>
-                            <a>Airbnb your home</a>
+                            <Link to={'/listing-creation'}>Airbnb your home</Link>
                         </div>
                         <hr />
                         <div className={styles["user-menu-item"]}>

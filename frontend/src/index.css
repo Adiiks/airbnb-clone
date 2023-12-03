@@ -12,3 +12,12 @@ body {
     line-height: 1.43;
     color: #222;
 }
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:visited {
+    color: inherit;
+}

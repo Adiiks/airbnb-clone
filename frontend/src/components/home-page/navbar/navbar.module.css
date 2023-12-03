@@ -4,10 +4,6 @@ button {
     cursor: pointer;
 }
 
-a {
-    cursor: pointer;
-}
-
 header {
     position: fixed;
     width: 100%;

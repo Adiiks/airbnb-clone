@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import styles from './navbar.module.css';
-import Category from '../../models/Category';
+import Category from '../../../models/Category';
 import axios from 'axios';
-import { backendUrl } from '../../global-proporties';
+import { backendUrl } from '../../../global-proporties';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
 const Categories = () => {
@@ -43,7 +43,7 @@ const Categories = () => {
                     className={`${styles["category-item-wrapper"]} ${category.id === selectedCategoryId && styles["selected-category"]}`}
                     onClick={() => handleSelectCategory(category.id)}
                 >
-                    <img src={require('../../assets/categories-icons/' + category.iconName)} />
+                    <img src={require('../../../assets/categories-icons/' + category.iconName)} />
                     <p>{category.name}</p>
                 </div>
             )}
