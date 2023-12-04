@@ -5,6 +5,7 @@ import ListingCreationNavbar from './ListingCreationNavbar';
 import styles from './listing-creation.module.css';
 import { useNavigate } from 'react-router-dom';
 import CategorySelection from './CategorySelection';
+import LocationSelection from './LocationSelection';
 
 export type ListingCreationAction = {
     type: ListingCreationActionType,
@@ -27,28 +28,34 @@ function reducer(state: ListingCreationState, action: ListingCreationAction) {
                 categoryId: payload
             }
         }
+        case ListingCreationActionType.UPDATE_ADDRESS: {
+            return {
+                ...state,
+                nextStepEnable: true,
+                address: payload
+            }
+        }
         case ListingCreationActionType.GO_PREV_STEP: {
             return {
                 ...state,
-                currentStep: state.currentStep - 1
+                currentStep: state.currentStep - 1,
+                nextStepEnable: true
             }
         }
         case ListingCreationActionType.GO_NEXT_STEP: {
-            const enableNextBtn = isNextStepVisited(state);
-
             return {
                 ...state,
                 currentStep: state.currentStep + 1,
-                nextStepEnable: enableNextBtn
+                nextStepEnable: false
+            }
+        }
+        case ListingCreationActionType.BLOCK_NEXT_BTN: {
+            return {
+                ...state,
+                nextStepEnable: false
             }
         }
     }
-}
-
-function isNextStepVisited(state: ListingCreationState) {
-    //TODO
-
-    return false;
 }
 
 const ListingCreation = () => {
@@ -67,11 +74,22 @@ const ListingCreation = () => {
     return (
         <div id={styles['listing-creation-container']}>
             <ListingCreationNavbar />
-            {
-                listingCreationState.currentStep === STEPS.CATEGORY && 
-                <CategorySelection dispatch={dispatch} selectedCategoryId={listingCreationState.categoryId} />
-            }
-            <ListingCreationFooter currentStep={listingCreationState.currentStep} nextBtnEnable={listingCreationState.nextStepEnable} onBack={handleBackClick} />
+            <div id={styles['selection-container']} className={(listingCreationState.currentStep !== STEPS.CATEGORY) ? styles['center-content-vertical'] : ''}>
+                {
+                    listingCreationState.currentStep === STEPS.CATEGORY &&
+                    <CategorySelection dispatch={dispatch} selectedCategoryId={listingCreationState.categoryId} />
+                }
+                {
+                    listingCreationState.currentStep === STEPS.LOCATION &&
+                    <LocationSelection dispatch={dispatch} />
+                }
+            </div>
+            <ListingCreationFooter
+                currentStep={listingCreationState.currentStep}
+                nextBtnEnable={listingCreationState.nextStepEnable}
+                onBack={handleBackClick}
+                dispatch={dispatch}
+            />
         </div>
     );
 }
@@ -81,5 +99,7 @@ export default ListingCreation;
 export enum ListingCreationActionType {
     GO_PREV_STEP,
     GO_NEXT_STEP,
-    UPDATE_CATEGORY_ID
+    BLOCK_NEXT_BTN,
+    UPDATE_CATEGORY_ID,
+    UPDATE_ADDRESS
 }

@@ -26,7 +26,7 @@ const CategorySelection: React.FC<Props> = ({ dispatch, selectedCategoryId }) =>
     }, []);
 
     return (
-        <div id={styles['category-selection-container']}>
+        <>
             <h1>Which of these best describes your place?</h1>
             <div id={styles['categories-wrapper']}>
                 {categories.length > 0 && categories.map((category) =>
@@ -40,7 +40,7 @@ const CategorySelection: React.FC<Props> = ({ dispatch, selectedCategoryId }) =>
                     </div>
                 )}
             </div>
-        </div>
+        </>
     );
 }
 
