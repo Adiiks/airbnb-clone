@@ -6,6 +6,7 @@ import styles from './listing-creation.module.css';
 import { useNavigate } from 'react-router-dom';
 import CategorySelection from './CategorySelection';
 import LocationSelection from './LocationSelection';
+import BasicInformationSelection from './BasicInformationSelection';
 
 export type ListingCreationAction = {
     type: ListingCreationActionType,
@@ -14,7 +15,13 @@ export type ListingCreationAction = {
 
 const initialListingCreationState: ListingCreationState = {
     currentStep: STEPS.CATEGORY,
-    nextStepEnable: false
+    nextStepEnable: false,
+    basicInfo: {
+        maxGuests: 4,
+        totalBedrooms: 1,
+        totalBeds: 1,
+        totalBathrooms: 1
+    }
 }
 
 function reducer(state: ListingCreationState, action: ListingCreationAction) {
@@ -35,18 +42,31 @@ function reducer(state: ListingCreationState, action: ListingCreationAction) {
                 address: payload
             }
         }
+        case ListingCreationActionType.UPDATE_BASIC_INFO: {
+            return {
+                ...state,
+                basicInfo: {
+                    ...state.basicInfo,
+                    ...payload
+                }
+            }
+        }
         case ListingCreationActionType.GO_PREV_STEP: {
+            const nextStepEnable = (state.currentStep - 1 === STEPS.LOCATION) ? false : true;
+
             return {
                 ...state,
                 currentStep: state.currentStep - 1,
-                nextStepEnable: true
+                nextStepEnable: nextStepEnable
             }
         }
         case ListingCreationActionType.GO_NEXT_STEP: {
+            const nextStepEnable = (state.currentStep + 1 === STEPS.BASIC_INFO) ? true : false;
+
             return {
                 ...state,
                 currentStep: state.currentStep + 1,
-                nextStepEnable: false
+                nextStepEnable: nextStepEnable
             }
         }
         case ListingCreationActionType.BLOCK_NEXT_BTN: {
@@ -83,6 +103,10 @@ const ListingCreation = () => {
                     listingCreationState.currentStep === STEPS.LOCATION &&
                     <LocationSelection dispatch={dispatch} />
                 }
+                {
+                    listingCreationState.currentStep === STEPS.BASIC_INFO &&
+                    <BasicInformationSelection defaultVaulues={listingCreationState.basicInfo} dispatch={dispatch} />
+                }
             </div>
             <ListingCreationFooter
                 currentStep={listingCreationState.currentStep}
@@ -101,5 +125,6 @@ export enum ListingCreationActionType {
     GO_NEXT_STEP,
     BLOCK_NEXT_BTN,
     UPDATE_CATEGORY_ID,
-    UPDATE_ADDRESS
+    UPDATE_ADDRESS,
+    UPDATE_BASIC_INFO
 }
