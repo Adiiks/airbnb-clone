@@ -7,12 +7,16 @@ export default interface ListingCreationState {
     categoryId?: number,
     address?: Address,
     basicInfo: ListingBasicInfo,
-    image?: File
+    image?: File,
+    title?: string
+    description: string
 }
 
 export enum STEPS {
     CATEGORY = 1,
     LOCATION = 2,
     BASIC_INFO = 3,
-    IMAGE = 4
+    IMAGE = 4,
+    TITLE = 5,
+    DESCRIPTION = 6
 }

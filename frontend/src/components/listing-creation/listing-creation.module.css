@@ -235,6 +235,31 @@ label {
     background-color: white;
 }
 
+.text-area-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.text-area-wrapper textarea {
+    overflow-y: auto;
+    border-radius: 5px;
+    padding: 1.5rem;
+    width: 630px;
+    height: 250px;
+    font-size: 17px;
+    resize: none;
+}
+
+.text-area-wrapper p {
+    font-weight: bold;
+    color: #717171;
+}
+
+.text-area-short {
+    height: 150px !important;
+}
+
 @media (max-width: 950px) {
 
     #categories-wrapper {
@@ -253,6 +278,10 @@ label {
     #image-selection-container  {
         width: 100%;
         height: 300px;
+    }
+
+    .text-area-wrapper textarea {
+        width: 450px;
     }
 
 }
