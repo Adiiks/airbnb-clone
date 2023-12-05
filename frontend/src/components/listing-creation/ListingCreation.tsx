@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import CategorySelection from './CategorySelection';
 import LocationSelection from './LocationSelection';
 import BasicInformationSelection from './BasicInformationSelection';
+import ImageSelection from './ImageSelection';
 
 export type ListingCreationAction = {
     type: ListingCreationActionType,
@@ -51,6 +52,23 @@ function reducer(state: ListingCreationState, action: ListingCreationAction) {
                 }
             }
         }
+        case ListingCreationActionType.ADD_IMAGE: {
+            return {
+                ...state,
+                nextStepEnable: true,
+                image: payload
+            }
+        }
+        case ListingCreationActionType.DELETE_IMAGE: {
+            const updatedState = {
+                ...state,
+                nextStepEnable: false
+            }
+
+            delete updatedState.image;
+
+            return updatedState;
+        }
         case ListingCreationActionType.GO_PREV_STEP: {
             const nextStepEnable = (state.currentStep - 1 === STEPS.LOCATION) ? false : true;
 
@@ -61,7 +79,7 @@ function reducer(state: ListingCreationState, action: ListingCreationAction) {
             }
         }
         case ListingCreationActionType.GO_NEXT_STEP: {
-            const nextStepEnable = (state.currentStep + 1 === STEPS.BASIC_INFO) ? true : false;
+            const nextStepEnable = isNextStepEnable(state);
 
             return {
                 ...state,
@@ -76,6 +94,14 @@ function reducer(state: ListingCreationState, action: ListingCreationAction) {
             }
         }
     }
+}
+
+function isNextStepEnable(state: ListingCreationState) {
+    if (state.currentStep + 1 === STEPS.BASIC_INFO) return true;
+    
+    if (state.currentStep + 1 === STEPS.IMAGE && state.image) return true;
+
+    return false;
 }
 
 const ListingCreation = () => {
@@ -107,6 +133,10 @@ const ListingCreation = () => {
                     listingCreationState.currentStep === STEPS.BASIC_INFO &&
                     <BasicInformationSelection defaultVaulues={listingCreationState.basicInfo} dispatch={dispatch} />
                 }
+                {
+                    listingCreationState.currentStep === STEPS.IMAGE &&
+                    <ImageSelection dispatch={dispatch} image={listingCreationState.image} />
+                }
             </div>
             <ListingCreationFooter
                 currentStep={listingCreationState.currentStep}
@@ -126,5 +156,7 @@ export enum ListingCreationActionType {
     BLOCK_NEXT_BTN,
     UPDATE_CATEGORY_ID,
     UPDATE_ADDRESS,
-    UPDATE_BASIC_INFO
+    UPDATE_BASIC_INFO,
+    ADD_IMAGE,
+    DELETE_IMAGE
 }

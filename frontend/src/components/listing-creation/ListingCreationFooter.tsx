@@ -13,7 +13,7 @@ const ListingCreationFooter: React.FC<Props> = ({ currentStep, nextBtnEnable, on
     return (
         <footer id={styles['listing-creation-footer']}>
             <button id={styles['back-btn']} className={styles['listing-creation-btn']} onClick={onBack}>Back</button>
-            <p id={styles['steps']}>{`Steps ${currentStep}/3`}</p>
+            <p id={styles['steps']}>{`Steps ${currentStep}/4`}</p>
             <button
                 id={styles['next-btn']}
                 className={styles['listing-creation-btn']}

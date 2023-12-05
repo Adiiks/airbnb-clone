@@ -6,11 +6,13 @@ export default interface ListingCreationState {
     nextStepEnable: boolean,
     categoryId?: number,
     address?: Address,
-    basicInfo: ListingBasicInfo
+    basicInfo: ListingBasicInfo,
+    image?: File
 }
 
 export enum STEPS {
     CATEGORY = 1,
     LOCATION = 2,
-    BASIC_INFO = 3
+    BASIC_INFO = 3,
+    IMAGE = 4
 }
