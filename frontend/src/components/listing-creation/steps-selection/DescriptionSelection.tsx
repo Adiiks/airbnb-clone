@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { ListingCreationAction, ListingCreationActionType } from './ListingCreation';
-import styles from './listing-creation.module.css';
+import { ListingCreationAction, ListingCreationActionType } from '../ListingCreation';
+import styles from '../listing-creation.module.css';
 
 type Props = {
     dispatch: React.Dispatch<ListingCreationAction>,

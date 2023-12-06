@@ -4,12 +4,13 @@ import ListingCreationFooter from './ListingCreationFooter';
 import ListingCreationNavbar from './ListingCreationNavbar';
 import styles from './listing-creation.module.css';
 import { useNavigate } from 'react-router-dom';
-import CategorySelection from './CategorySelection';
-import LocationSelection from './LocationSelection';
-import BasicInformationSelection from './BasicInformationSelection';
-import ImageSelection from './ImageSelection';
-import DescriptionSelection from './DescriptionSelection';
-import TitleSelection from './TitleSelection';
+import CategorySelection from './steps-selection/CategorySelection';
+import LocationSelection from './steps-selection/LocationSelection';
+import BasicInformationSelection from './steps-selection/BasicInformationSelection';
+import ImageSelection from './steps-selection/ImageSelection';
+import DescriptionSelection from './steps-selection/DescriptionSelection';
+import TitleSelection from './steps-selection/TitleSelection';
+import PriceSelection from './steps-selection/PriceSelection';
 
 export type ListingCreationAction = {
     type: ListingCreationActionType,
@@ -25,7 +26,8 @@ const initialListingCreationState: ListingCreationState = {
         totalBeds: 1,
         totalBathrooms: 1
     },
-    description: 'You will have a great time at this comfortable place to stay.'
+    description: 'You will have a great time at this comfortable place to stay.',
+    price: 120
 }
 
 function reducer(state: ListingCreationState, action: ListingCreationAction) {
@@ -90,6 +92,13 @@ function reducer(state: ListingCreationState, action: ListingCreationAction) {
                 nextStepEnable: nextStepEnable
             }
         }
+        case ListingCreationActionType.UPDATE_PRICE: {
+            return {
+                ...state,
+                price: payload,
+                nextStepEnable: true
+            }
+        }
         case ListingCreationActionType.GO_PREV_STEP: {
             const nextStepEnable = isNextStepEnable(state, true);
 
@@ -118,6 +127,7 @@ function reducer(state: ListingCreationState, action: ListingCreationAction) {
 }
 
 function isNextStepEnable(state: ListingCreationState, isGoToPevStep: boolean) {
+    // GOING FORWARD
     if (!isGoToPevStep && state.currentStep + 1 === STEPS.BASIC_INFO) return true;
     
     if (!isGoToPevStep && state.currentStep + 1 === STEPS.IMAGE && state.image) return true;
@@ -126,6 +136,9 @@ function isNextStepEnable(state: ListingCreationState, isGoToPevStep: boolean) {
 
     if (!isGoToPevStep && state.currentStep + 1 === STEPS.DESCRIPTION && state.description) return true;
 
+    if (!isGoToPevStep && state.currentStep + 1 === STEPS.PRICE) return true;
+
+    // GOING BACK
     if (isGoToPevStep && state.currentStep - 1 !== STEPS.LOCATION) return true;
 
     return false;
@@ -172,6 +185,10 @@ const ListingCreation = () => {
                     listingCreationState.currentStep === STEPS.DESCRIPTION &&
                     <DescriptionSelection dispatch={dispatch} description={listingCreationState.description} />
                 }
+                {
+                    listingCreationState.currentStep === STEPS.PRICE &&
+                    <PriceSelection dispatch={dispatch} price={listingCreationState.price} />
+                }
             </div>
             <ListingCreationFooter
                 currentStep={listingCreationState.currentStep}
@@ -195,5 +212,6 @@ export enum ListingCreationActionType {
     ADD_IMAGE,
     DELETE_IMAGE,
     UPDATE_TITLE,
-    UPDATE_DESCRIPTION
+    UPDATE_DESCRIPTION,
+    UPDATE_PRICE
 }

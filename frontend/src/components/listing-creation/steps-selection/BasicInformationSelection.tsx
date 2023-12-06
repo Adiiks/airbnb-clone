@@ -1,7 +1,7 @@
-import ListingBasicInfo from '../../models/ListingBasicInfo';
+import ListingBasicInfo from '../../../models/ListingBasicInfo';
 import CounterInput from './CounterInput';
-import { ListingCreationAction, ListingCreationActionType } from './ListingCreation';
-import styles from './listing-creation.module.css';
+import { ListingCreationAction, ListingCreationActionType } from '../ListingCreation';
+import styles from '../listing-creation.module.css';
 
 type Props = {
     defaultVaulues: ListingBasicInfo,

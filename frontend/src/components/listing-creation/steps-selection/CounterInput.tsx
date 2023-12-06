@@ -1,5 +1,5 @@
 import { CounterAction } from './BasicInformationSelection';
-import styles from './listing-creation.module.css';
+import styles from '../listing-creation.module.css';
 import { FiPlus, FiMinus } from "react-icons/fi";
 
 type Props = {

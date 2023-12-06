@@ -10,6 +10,7 @@ export default interface ListingCreationState {
     image?: File,
     title?: string
     description: string
+    price: number
 }
 
 export enum STEPS {
@@ -18,5 +19,6 @@ export enum STEPS {
     BASIC_INFO = 3,
     IMAGE = 4,
     TITLE = 5,
-    DESCRIPTION = 6
+    DESCRIPTION = 6,
+    PRICE = 7
 }

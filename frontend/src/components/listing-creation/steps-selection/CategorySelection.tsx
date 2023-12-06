@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import styles from './listing-creation.module.css';
-import Category from '../../models/Category';
-import { backendUrl } from '../../global-proporties';
+import styles from '../listing-creation.module.css';
+import Category from '../../../models/Category';
+import { backendUrl } from '../../../global-proporties';
 import axios from 'axios';
-import { ListingCreationAction, ListingCreationActionType } from './ListingCreation';
+import { ListingCreationAction, ListingCreationActionType } from '../ListingCreation';
 
 type Props = {
     dispatch: React.Dispatch<ListingCreationAction>,
@@ -35,7 +35,7 @@ const CategorySelection: React.FC<Props> = ({ dispatch, selectedCategoryId }) =>
                         className={`${styles['category-item']} ${(category.id === selectedCategoryId) && styles['selected-category']}`}
                         onClick={() => dispatch({ type: ListingCreationActionType.UPDATE_CATEGORY_ID, payload: category.id })}
                     >
-                        <img src={require('../../assets/categories-icons/' + category.iconName)} />
+                        <img src={require('../../../assets/categories-icons/' + category.iconName)} />
                         <p>{category.name}</p>
                     </div>
                 )}

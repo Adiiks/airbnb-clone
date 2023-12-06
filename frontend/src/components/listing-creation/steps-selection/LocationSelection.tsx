@@ -1,8 +1,8 @@
 import { useMemo, useRef } from 'react';
-import styles from './listing-creation.module.css';
+import styles from '../listing-creation.module.css';
 import { getNames } from 'country-list';
-import { ListingCreationAction, ListingCreationActionType } from './ListingCreation';
-import Address from '../../models/Address';
+import { ListingCreationAction, ListingCreationActionType } from '../ListingCreation';
+import Address from '../../../models/Address';
 
 type Props = {
     dispatch: React.Dispatch<ListingCreationAction>,

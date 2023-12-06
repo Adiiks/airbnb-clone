@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import styles from './listing-creation.module.css';
+import styles from '../listing-creation.module.css';
 import { IoImagesOutline } from "react-icons/io5";
-import { ListingCreationAction, ListingCreationActionType } from './ListingCreation';
+import { ListingCreationAction, ListingCreationActionType } from '../ListingCreation';
 
 type Props = {
     dispatch: React.Dispatch<ListingCreationAction>,
