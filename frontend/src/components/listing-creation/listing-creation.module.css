@@ -59,6 +59,10 @@
     cursor: not-allowed;
 }
 
+.loading-btn {
+    opacity: 0.2;
+}
+
 #selection-container {
     height: 685px;
     padding: 0 1rem;

@@ -13,7 +13,7 @@ const TitleSelection: React.FC<Props> = ({ dispatch, title }) => {
     const titleRef = useRef<HTMLTextAreaElement>(null);
 
     function handleTitleChange() {
-        const value = titleRef.current?.value.trim();
+        const value = titleRef.current?.value;
 
         dispatch({
             type: ListingCreationActionType.UPDATE_TITLE,

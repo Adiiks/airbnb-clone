@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useContext, useReducer, useState } from 'react';
 import ListingCreationState, { STEPS } from '../../models/ListingCreationState';
 import ListingCreationFooter from './ListingCreationFooter';
 import ListingCreationNavbar from './ListingCreationNavbar';
@@ -11,6 +11,11 @@ import ImageSelection from './steps-selection/ImageSelection';
 import DescriptionSelection from './steps-selection/DescriptionSelection';
 import TitleSelection from './steps-selection/TitleSelection';
 import PriceSelection from './steps-selection/PriceSelection';
+import axios from 'axios';
+import { AuthContext } from '../../store/auth-context';
+import Listing from '../../models/Listing';
+import { backendUrl } from '../../global-proporties';
+import toast from 'react-hot-toast';
 
 export type ListingCreationAction = {
     type: ListingCreationActionType,
@@ -146,6 +151,9 @@ function isNextStepEnable(state: ListingCreationState, isGoToPevStep: boolean) {
 
 const ListingCreation = () => {
     const [listingCreationState, dispatch] = useReducer(reducer, initialListingCreationState);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const authContext = useContext(AuthContext);
 
     const navigate = useNavigate();
 
@@ -155,6 +163,49 @@ const ListingCreation = () => {
         }
 
         dispatch({ type: ListingCreationActionType.GO_PREV_STEP });
+    }
+
+    function handleCreateClick() {
+        setIsLoading(true);
+
+        const listingToCreate: Listing = {
+            categoryId: listingCreationState.categoryId,
+            address: listingCreationState.address,
+            listingDetails: listingCreationState.basicInfo,
+            title: listingCreationState.title,
+            description: listingCreationState.description,
+            price: listingCreationState.price
+        }
+        
+        const stringBody = JSON.stringify(listingToCreate);
+        const blobBody = new Blob([stringBody], {
+            type: 'application/json'
+        });
+
+        const formData = new FormData();
+        formData.append('file', listingCreationState.image);
+        formData.append('listing', blobBody)
+
+        const url = backendUrl + '/listings';
+
+        axios({
+            method: 'post',
+            url: url,
+            data: formData,
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Authorization": `Bearer ${authContext.auth?.token}`
+            }
+        })
+        .then(() => {
+            navigate('/');
+        })
+        .catch(() => {
+            toast.error('Something went wrong!');
+        })
+        .finally(() => {
+            setIsLoading(false);
+        });
     }
 
     return (
@@ -195,6 +246,8 @@ const ListingCreation = () => {
                 nextBtnEnable={listingCreationState.nextStepEnable}
                 onBack={handleBackClick}
                 dispatch={dispatch}
+                onCreate={handleCreateClick}
+                isLoading={isLoading}
             />
         </div>
     );

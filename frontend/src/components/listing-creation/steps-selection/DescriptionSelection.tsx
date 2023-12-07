@@ -13,7 +13,7 @@ const DescriptionSelection: React.FC<Props> = ({ dispatch, description }) => {
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
     function handleDescriptionChange() {
-        const value = descriptionRef.current?.value.trim();
+        const value = descriptionRef.current?.value;
 
         dispatch({
             type: ListingCreationActionType.UPDATE_DESCRIPTION,

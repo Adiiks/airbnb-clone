@@ -2,8 +2,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import AuthContextProvider from "./store/auth-context";
 import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import ListingCreationState from "./components/listing-creation/ListingCreation";
 import ListingCreation from "./components/listing-creation/ListingCreation";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +22,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthContextProvider>
+      <Toaster />
       <RouterProvider router={router} />
     </AuthContextProvider>
   );
