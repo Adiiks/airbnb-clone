@@ -7,7 +7,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.adrian.airbnb.dto.ListingRequest;
+import pl.adrian.airbnb.dto.ListingResponse;
 import pl.adrian.airbnb.service.ListingService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/listings")
@@ -21,5 +24,11 @@ public class ListingController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createListing(@RequestPart MultipartFile file, @Valid @RequestPart ListingRequest listing) {
         listingService.createListing(file, listing);
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/category/{categoryId}")
+    public List<ListingResponse> getListingsByCategory(@PathVariable Integer categoryId) {
+        return listingService.getListingsByCategory(categoryId);
     }
 }

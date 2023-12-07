@@ -6,15 +6,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import pl.adrian.airbnb.dto.AddressRequest;
-import pl.adrian.airbnb.dto.ListingDetailsRequest;
+import pl.adrian.airbnb.converter.ListingConverter;
 import pl.adrian.airbnb.dto.ListingRequest;
+import pl.adrian.airbnb.dto.ListingResponse;
 import pl.adrian.airbnb.entity.*;
 import pl.adrian.airbnb.repository.CategoryRepository;
 import pl.adrian.airbnb.repository.ListingRepository;
 import pl.adrian.airbnb.repository.UserRepository;
 import pl.adrian.airbnb.security.AuthenticationFacade;
 import pl.adrian.airbnb.utils.ImageValidation;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class ListingServiceImpl implements ListingService {
     private final CloudinaryService cloudinaryService;
     private final AuthenticationFacade authFacade;
     private final ImageValidation imageValidation;
+    private final ListingConverter listingConverter;
 
     @Transactional
     @Override
@@ -41,7 +44,7 @@ public class ListingServiceImpl implements ListingService {
 
         String imageUrl = cloudinaryService.uploadImage(image);
 
-        Listing newListing = convertListingRequestToListing(listing);
+        Listing newListing = listingConverter.convertListingRequestToListing(listing);
         newListing.setImageUrl(imageUrl);
         newListing.setCategory(listingCategory);
         newListing.setOwner(owner);
@@ -49,32 +52,12 @@ public class ListingServiceImpl implements ListingService {
         listingRepository.save(newListing);
     }
 
-    private Listing convertListingRequestToListing(ListingRequest listingRequest) {
-        return Listing.builder()
-                .listingDetails(convertListingDetailsRequestToListingDetails(listingRequest.listingDetails()))
-                .address(convertAddressRequestToAddress(listingRequest.address()))
-                .price(listingRequest.price())
-                .title(listingRequest.title())
-                .description(listingRequest.description())
-                .build();
-    }
-
-    private Address convertAddressRequestToAddress(AddressRequest addressRequest) {
-        return Address.builder()
-                .city(addressRequest.city())
-                .streetAddress(addressRequest.streetAddress())
-                .country(addressRequest.country())
-                .postalCode(addressRequest.postalCode())
-                .build();
-    }
-
-    private ListingDetails convertListingDetailsRequestToListingDetails(ListingDetailsRequest listingDetailsRequest) {
-        return ListingDetails.builder()
-                .totalBathrooms(listingDetailsRequest.totalBathrooms())
-                .totalBedrooms(listingDetailsRequest.totalBedrooms())
-                .totalBeds(listingDetailsRequest.totalBeds())
-                .maxGuests(listingDetailsRequest.maxGuests())
-                .build();
+    @Override
+    public List<ListingResponse> getListingsByCategory(Integer categoryId) {
+        return listingRepository.findByCategory_Id(categoryId)
+                .stream()
+                .map(listingConverter::convertListingToListingResponse)
+                .toList();
     }
 
     private User findUser(String email) {

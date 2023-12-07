@@ -17,6 +17,7 @@ import pl.adrian.airbnb.service.ListingService;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -74,5 +75,14 @@ class ListingControllerTest {
                 .andExpect(jsonPath("$.errors", hasSize(12)));
 
         verify(listingService, times(0)).createListing(any(), any());
+    }
+
+    @DisplayName("Get list of listing by category id")
+    @Test
+    void getListingByCategory() throws Exception {
+        mockMvc.perform(get("/api/listings/category/1"))
+                .andExpect(status().isOk());
+
+        verify(listingService).getListingsByCategory(anyInt());
     }
 }

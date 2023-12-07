@@ -6,18 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import pl.adrian.airbnb.converter.ListingConverter;
 import pl.adrian.airbnb.data.CategoryDataBuilder;
 import pl.adrian.airbnb.data.ListingDataBuilder;
 import pl.adrian.airbnb.data.UserDataBuilder;
-import pl.adrian.airbnb.dto.AddressRequest;
-import pl.adrian.airbnb.dto.ListingDetailsRequest;
-import pl.adrian.airbnb.dto.ListingRequest;
+import pl.adrian.airbnb.dto.*;
 import pl.adrian.airbnb.entity.*;
 import pl.adrian.airbnb.repository.CategoryRepository;
 import pl.adrian.airbnb.repository.ListingRepository;
@@ -25,6 +22,7 @@ import pl.adrian.airbnb.repository.UserRepository;
 import pl.adrian.airbnb.security.AuthenticationFacade;
 import pl.adrian.airbnb.utils.ImageValidation;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,6 +52,8 @@ class ListingServiceImplTest {
 
     ImageValidation imageValidation = new ImageValidation();
 
+    ListingConverter listingConverter = new ListingConverter();
+
     @Captor
     ArgumentCaptor<Listing> listingAc;
 
@@ -65,7 +65,8 @@ class ListingServiceImplTest {
                 categoryRepository,
                 cloudinaryService,
                 authenticationFacade,
-                imageValidation
+                imageValidation,
+                listingConverter
         );
     }
 
@@ -170,5 +171,34 @@ class ListingServiceImplTest {
         assertEquals(listingDetailsRequest.totalBedrooms(), listingDetails.getTotalBedrooms());
         assertEquals(listingDetailsRequest.totalBeds(), listingDetails.getTotalBeds());
         assertEquals(listingDetailsRequest.totalBathrooms(), listingDetails.getTotalBathrooms());
+    }
+
+    @DisplayName("Get list of listings by category id")
+    @Test
+    void getListingsByCategory() {
+        Listing listingDb = ListingDataBuilder.buildListing();
+        listingDb.getOwner().setFullName("Jan Kowalski");
+        String ownerName = "Jan";
+
+        when(listingRepository.findByCategory_Id(anyInt()))
+                .thenReturn(List.of(listingDb));
+
+        List<ListingResponse> listings = listingService.getListingsByCategory(listingDb.getCategory().getId());
+
+        assertEquals(1, listings.size());
+
+        // assert Listing
+        ListingResponse listing = listings.get(0);
+        assertEquals(listingDb.getId(), listing.id());
+        assertEquals(listingDb.getImageUrl(), listing.imageUrl());
+        assertNotNull(listing.address());
+        assertEquals(ownerName, listing.ownerName());
+        assertEquals(listingDb.getPrice(), listing.price());
+
+        // assert Address
+        Address addressDb = listingDb.getAddress();
+        AddressResponse address = listing.address();
+        assertEquals(addressDb.getCountry(), address.country());
+        assertEquals(addressDb.getCity(), address.city());
     }
 }
