@@ -1,4 +1,4 @@
-import { Address } from "cluster";
+import Address from "./Address";
 import ListingBasicInfo from "./ListingBasicInfo";
 
 export default interface ListingCreationState {

@@ -20,7 +20,7 @@ const ListingCreationFooter: React.FC<Props> = ({ currentStep, nextBtnEnable, on
                 onClick={() => dispatch({ type: ListingCreationActionType.GO_NEXT_STEP })}
                 disabled={!nextBtnEnable}
             >
-                Next
+                {currentStep !== 7 ? 'Next' : 'Create'}
             </button>
         </footer>
     );
