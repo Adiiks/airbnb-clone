@@ -19,13 +19,14 @@ public class ListingConverter {
                 .build();
     }
 
-    public ListingResponse convertListingToListingResponse(Listing listing) {
+    public ListingResponse convertListingToListingResponse(Listing listing, boolean isOnUserWishlist) {
         return new ListingResponse(
                 listing.getId(),
                 listing.getImageUrl(),
                 convertAddressToAddressResponse(listing.getAddress()),
                 extractOwnerNameFromFullName(listing.getOwner().getFullName()),
-                listing.getPrice()
+                listing.getPrice(),
+                isOnUserWishlist
         );
     }
 

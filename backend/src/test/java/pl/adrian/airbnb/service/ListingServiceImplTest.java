@@ -173,15 +173,18 @@ class ListingServiceImplTest {
         assertEquals(listingDetailsRequest.totalBathrooms(), listingDetails.getTotalBathrooms());
     }
 
-    @DisplayName("Get list of listings by category id")
+    @DisplayName("Get list of listings by category id - categories not added to user wishlist")
     @Test
-    void getListingsByCategory() {
+    void getListingsByCategoryWithoutUserWishlist() {
         Listing listingDb = ListingDataBuilder.buildListing();
         listingDb.getOwner().setFullName("Jan Kowalski");
         String ownerName = "Jan";
 
         when(listingRepository.findByCategory_Id(anyInt()))
                 .thenReturn(List.of(listingDb));
+
+        when(authenticationFacade.getUserEmail())
+                .thenReturn(null);
 
         List<ListingResponse> listings = listingService.getListingsByCategory(listingDb.getCategory().getId());
 
@@ -194,6 +197,41 @@ class ListingServiceImplTest {
         assertNotNull(listing.address());
         assertEquals(ownerName, listing.ownerName());
         assertEquals(listingDb.getPrice(), listing.price());
+        assertFalse(listing.isOnUserWishlist());
+
+        // assert Address
+        Address addressDb = listingDb.getAddress();
+        AddressResponse address = listing.address();
+        assertEquals(addressDb.getCountry(), address.country());
+        assertEquals(addressDb.getCity(), address.city());
+    }
+
+    @DisplayName("Get list of listings by category id - categories with user wishlist")
+    @Test
+    void getListingsByCategoryWithUserWishlist() {
+        Listing listingDb = ListingDataBuilder.buildListing();
+        listingDb.getUsersWhoAddedToWishlist().add(listingDb.getOwner());
+        listingDb.getOwner().setFullName("Jan Kowalski");
+        String ownerName = "Jan";
+
+        when(listingRepository.findByCategory_Id(anyInt()))
+                .thenReturn(List.of(listingDb));
+
+        when(authenticationFacade.getUserEmail())
+                .thenReturn(listingDb.getUsersWhoAddedToWishlist().iterator().next().getEmail());
+
+        List<ListingResponse> listings = listingService.getListingsByCategory(listingDb.getCategory().getId());
+
+        assertEquals(1, listings.size());
+
+        // assert Listing
+        ListingResponse listing = listings.get(0);
+        assertEquals(listingDb.getId(), listing.id());
+        assertEquals(listingDb.getImageUrl(), listing.imageUrl());
+        assertNotNull(listing.address());
+        assertEquals(ownerName, listing.ownerName());
+        assertEquals(listingDb.getPrice(), listing.price());
+        assertTrue(listing.isOnUserWishlist());
 
         // assert Address
         Address addressDb = listingDb.getAddress();

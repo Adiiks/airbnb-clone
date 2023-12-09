@@ -7,6 +7,8 @@ import pl.adrian.airbnb.entity.Address;
 import pl.adrian.airbnb.entity.Listing;
 import pl.adrian.airbnb.entity.ListingDetails;
 
+import java.util.HashSet;
+
 public class ListingDataBuilder {
 
     public static ListingRequest buildListingRequest() {
@@ -68,6 +70,7 @@ public class ListingDataBuilder {
                 .category(CategoryDataBuilder.buildCategory())
                 .imageUrl("http://cloudinary/image.png")
                 .id(1)
+                .usersWhoAddedToWishlist(new HashSet<>())
                 .build();
     }
 

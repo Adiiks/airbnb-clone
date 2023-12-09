@@ -9,5 +9,7 @@ export default interface Listing {
     title: string,
     description: string,
     price: number
-    imageUrl?: string
+    imageUrl?: string,
+    ownerName?: string,
+    isOnUserWishlist?: boolean
 }

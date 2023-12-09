@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />
+    element: <HomePage />,
   },
   {
     path: '/listing-creation',

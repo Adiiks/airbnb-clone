@@ -16,6 +16,7 @@ import pl.adrian.airbnb.repository.UserRepository;
 import pl.adrian.airbnb.security.AuthenticationFacade;
 import pl.adrian.airbnb.utils.ImageValidation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -54,10 +55,29 @@ public class ListingServiceImpl implements ListingService {
 
     @Override
     public List<ListingResponse> getListingsByCategory(Integer categoryId) {
-        return listingRepository.findByCategory_Id(categoryId)
-                .stream()
-                .map(listingConverter::convertListingToListingResponse)
-                .toList();
+        String userEmail = authFacade.getUserEmail();
+
+        List<Listing> listings = listingRepository.findByCategory_Id(categoryId);
+
+        return convertListingsToListingsResponseList(listings, userEmail);
+    }
+
+    private List<ListingResponse> convertListingsToListingsResponseList(List<Listing> listings, String userEmail) {
+        if (userEmail == null) {
+            return listings.stream()
+                    .map(listing -> listingConverter.convertListingToListingResponse(listing, false))
+                    .toList();
+        }
+        else {
+            return listings.stream()
+                    .map(listing -> {
+                        boolean isAddedToUserWishlist = listing.getUsersWhoAddedToWishlist()
+                                .stream()
+                                .anyMatch(user -> user.getEmail().equals(userEmail));
+                        return listingConverter.convertListingToListingResponse(listing, isAddedToUserWishlist);
+                    })
+                    .toList();
+        }
     }
 
     private User findUser(String email) {

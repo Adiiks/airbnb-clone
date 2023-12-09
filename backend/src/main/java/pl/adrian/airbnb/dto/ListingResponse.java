@@ -5,6 +5,7 @@ public record ListingResponse(
         String imageUrl,
         AddressResponse address,
         String ownerName,
-        Integer price
+        Integer price,
+        Boolean isOnUserWishlist
 ) {
 }
