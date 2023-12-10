@@ -55,6 +55,28 @@ public class ListingConverter {
                 .build();
     }
 
+    public ListingExtensiveResponse convertListingToListingExtensiveResponse(Listing listing) {
+        return new ListingExtensiveResponse(
+                listing.getId(),
+                listing.getImageUrl(),
+                listing.getTitle(),
+                listing.getDescription(),
+                convertListingDetailsToListingDetailsResponse(listing.getListingDetails()),
+                extractOwnerNameFromFullName(listing.getOwner().getFullName()),
+                convertAddressToAddressResponse(listing.getAddress()),
+                listing.getPrice()
+        );
+    }
+
+    public ListingDetailsResponse convertListingDetailsToListingDetailsResponse(ListingDetails listingDetails) {
+        return new ListingDetailsResponse(
+                listingDetails.getMaxGuests(),
+                listingDetails.getTotalBedrooms(),
+                listingDetails.getTotalBeds(),
+                listingDetails.getTotalBathrooms()
+        );
+    }
+
     private String extractOwnerNameFromFullName(String fullName) {
         int nameEndIndex = fullName.indexOf(" ");
 

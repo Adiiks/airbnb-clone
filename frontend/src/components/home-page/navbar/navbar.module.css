@@ -4,7 +4,7 @@ button {
     cursor: pointer;
 }
 
-header {
+.fixed-header {
     position: fixed;
     top: 0;
     width: 100%;
@@ -21,6 +21,7 @@ header {
 }
 
 .logo {
+    cursor: pointer;
     display: block;
 }
 

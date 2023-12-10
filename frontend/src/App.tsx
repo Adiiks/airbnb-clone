@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import ListingCreation from "./components/listing-creation/ListingCreation";
 import { Toaster } from "react-hot-toast";
+import ListingPage from "./pages/ListingPage";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <ListingCreation />
       </ProtectedRoute>
+  },
+  {
+    path: '/listing/:listingId',
+    element: <ListingPage />
   }
 ]);
 

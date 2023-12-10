@@ -1,6 +1,7 @@
 package pl.adrian.airbnb.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import pl.adrian.airbnb.dto.ListingExtensiveResponse;
 import pl.adrian.airbnb.dto.ListingRequest;
 import pl.adrian.airbnb.dto.ListingResponse;
 
@@ -15,4 +16,6 @@ public interface ListingService {
     void addListingToWishlist(Integer listingId);
 
     void removeListingFromWishlist(Integer listingId);
+
+    ListingExtensiveResponse getListingById(Integer listingId);
 }

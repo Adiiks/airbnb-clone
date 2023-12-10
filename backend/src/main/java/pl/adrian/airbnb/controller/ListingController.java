@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pl.adrian.airbnb.dto.ListingExtensiveResponse;
 import pl.adrian.airbnb.dto.ListingRequest;
 import pl.adrian.airbnb.dto.ListingResponse;
 import pl.adrian.airbnb.service.ListingService;
@@ -30,6 +31,12 @@ public class ListingController {
     @GetMapping("/category/{categoryId}")
     public List<ListingResponse> getListingsByCategory(@PathVariable Integer categoryId) {
         return listingService.getListingsByCategory(categoryId);
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/{listingId}")
+    public ListingExtensiveResponse getListingById(@PathVariable Integer listingId) {
+        return listingService.getListingById(listingId);
     }
 
     @PreAuthorize("isAuthenticated()")

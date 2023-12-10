@@ -99,4 +99,13 @@ class ListingControllerTest {
         mockMvc.perform(put("/api/listings/wishlist/remove/1"))
                 .andExpect(status().isNoContent());
     }
+
+    @DisplayName("Get listing by id")
+    @Test
+    void getListingById() throws Exception {
+        mockMvc.perform(get("/api/listings/1"))
+                .andExpect(status().isOk());
+
+        verify(listingService).getListingById(anyInt());
+    }
 }

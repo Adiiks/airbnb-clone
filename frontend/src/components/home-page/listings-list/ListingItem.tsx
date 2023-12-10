@@ -8,6 +8,7 @@ import Modal from '../../modals/Modal';
 import axios from 'axios';
 import { backendUrl } from '../../../global-proporties';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const initialModalState: ModalObject = {
     showModal: false
@@ -22,6 +23,7 @@ const ListingItem: React.FC<Props> = ({ listing }) => {
     const [isOnUserWishlist, setIsOnUserWishlist] = useState<boolean | null>(null);
 
     const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
 
     function handleCloseModalClick() {
         setModal({
@@ -59,7 +61,7 @@ const ListingItem: React.FC<Props> = ({ listing }) => {
 
     return (
         <div className={styles["listing-item-container"]}>
-            <img src={listing.imageUrl} alt="listing" />
+            <img src={listing.imageUrl} alt="listing" onClick={() => navigate(`/listing/${listing.id}`)} />
             <p className={styles["bold"]}>{`${listing.address.city}, ${listing.address.country}`}</p>
             <p>{`Stay with ${listing.ownerName}`}</p>
             <p>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import pl.adrian.airbnb.converter.ListingConverter;
+import pl.adrian.airbnb.dto.ListingExtensiveResponse;
 import pl.adrian.airbnb.dto.ListingRequest;
 import pl.adrian.airbnb.dto.ListingResponse;
 import pl.adrian.airbnb.entity.*;
@@ -60,6 +61,14 @@ public class ListingServiceImpl implements ListingService {
         List<Listing> listings = listingRepository.findByCategory_Id(categoryId);
 
         return convertListingsToListingsResponseList(listings, userEmail);
+    }
+
+    @Override
+    public ListingExtensiveResponse getListingById(Integer listingId) {
+        return listingRepository.findById(listingId)
+                .map(listingConverter::convertListingToListingExtensiveResponse)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Listing with id: " + listingId + " not found"));
     }
 
     @Transactional

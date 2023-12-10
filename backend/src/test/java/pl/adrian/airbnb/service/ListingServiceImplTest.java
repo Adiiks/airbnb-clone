@@ -348,4 +348,27 @@ class ListingServiceImplTest {
         assertFalse(savedListing.getUsersWhoAddedToWishlist().contains(user));
         assertFalse(user.getWishlist().contains(savedListing));
     }
+
+    @DisplayName("Get listing by id - listing not found")
+    @Test
+    void getListingByIdListingNotFound() {
+        when(listingRepository.findById(anyInt()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () ->
+                listingService.getListingById(1));
+    }
+
+    @DisplayName("Get listing by id - success")
+    @Test
+    void getListingById() {
+        Listing listingDb = ListingDataBuilder.buildListing();
+
+        when(listingRepository.findById(anyInt()))
+                .thenReturn(Optional.of(listingDb));
+
+        ListingExtensiveResponse response =  listingService.getListingById(1);
+
+        assertNotNull(response);
+    }
 }

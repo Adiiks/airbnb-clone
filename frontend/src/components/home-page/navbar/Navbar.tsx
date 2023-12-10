@@ -3,18 +3,28 @@ import Logo from './Logo';
 import SearchBar from './SearchBar';
 import UserMenu from './UserMenu';
 import Categories from './Categories';
+import React from 'react';
 
-const Navbar = () => {
+type Props = {
+    showCategories?: boolean,
+    fixedHeader?: boolean
+}
+
+const Navbar: React.FC<Props> = ({ showCategories, fixedHeader }) => {
     return (
-        <header>
+        <header className={fixedHeader ? styles['fixed-header'] : ''}>
             <div id={styles["main-bar"]}>
                 <Logo />
                 <SearchBar />
                 <UserMenu />
             </div>
-            <Categories />
+            {showCategories && <Categories />}
         </header>
     );
+}
+
+Navbar.defaultProps = {
+    showCategories: true
 }
 
 export default Navbar;
