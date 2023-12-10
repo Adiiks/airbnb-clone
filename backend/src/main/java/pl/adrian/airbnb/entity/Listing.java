@@ -66,4 +66,14 @@ public class Listing {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
+    public void addUserWishlist(User user) {
+        this.usersWhoAddedToWishlist.add(user);
+        user.getWishlist().add(this);
+    }
+
+    public void removeUserWishlist(User user) {
+        this.usersWhoAddedToWishlist.remove(user);
+        user.getWishlist().remove(this);
+    }
 }

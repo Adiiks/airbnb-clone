@@ -31,4 +31,18 @@ public class ListingController {
     public List<ListingResponse> getListingsByCategory(@PathVariable Integer categoryId) {
         return listingService.getListingsByCategory(categoryId);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/wishlist/add/{listingId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addListingToWishlist(@PathVariable Integer listingId) {
+        listingService.addListingToWishlist(listingId);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/wishlist/remove/{listingId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeListingFromWishlist(@PathVariable Integer listingId) {
+        listingService.removeListingFromWishlist(listingId);
+    }
 }

@@ -27,8 +27,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ListingServiceImplTest {
@@ -238,5 +237,115 @@ class ListingServiceImplTest {
         AddressResponse address = listing.address();
         assertEquals(addressDb.getCountry(), address.country());
         assertEquals(addressDb.getCity(), address.city());
+    }
+
+    @DisplayName("Add listing to user wishlist - listing not found")
+    @Test
+    void addListingToWishlistListingNotFound() {
+        when(listingRepository.findById(anyInt()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () ->
+                listingService.addListingToWishlist(1));
+    }
+
+    @DisplayName("Add listing to user wishlist - already added")
+    @Test
+    void addListingToWishlistAlreadyAdded() {
+        Listing listingDb = ListingDataBuilder.buildListing();
+        User user = UserDataBuilder.buildUser();
+        listingDb.addUserWishlist(user);
+
+        when(listingRepository.findById(anyInt()))
+                .thenReturn(Optional.of(listingDb));
+
+        when(authenticationFacade.getUserEmail())
+                .thenReturn(user.getEmail());
+
+        when(userRepository.findByEmail(any()))
+                .thenReturn(Optional.of(user));
+
+        listingService.addListingToWishlist(listingDb.getId());
+
+        verify(listingRepository, times(0)).save(any());
+    }
+
+    @DisplayName("Add listing to user wishlist - success")
+    @Test
+    void addListingToWishlist() {
+        Listing listingDb = ListingDataBuilder.buildListing();
+        User user = UserDataBuilder.buildUser();
+
+        when(listingRepository.findById(anyInt()))
+                .thenReturn(Optional.of(listingDb));
+
+        when(authenticationFacade.getUserEmail())
+                .thenReturn(user.getEmail());
+
+        when(userRepository.findByEmail(any()))
+                .thenReturn(Optional.of(user));
+
+        listingService.addListingToWishlist(listingDb.getId());
+
+        verify(listingRepository).save(listingAc.capture());
+
+        Listing savedListing = listingAc.getValue();
+        assertTrue(savedListing.getUsersWhoAddedToWishlist().contains(user));
+        assertTrue(user.getWishlist().contains(savedListing));
+    }
+
+    @DisplayName("Remove listing from user wishlist - listing not found")
+    @Test
+    void removeListingFromWishlistListingNotFound() {
+        when(listingRepository.findById(anyInt()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () ->
+                listingService.removeListingFromWishlist(1));
+    }
+
+    @DisplayName("Remove listing from user wishlist - listing is not on wishlist")
+    @Test
+    void removeListingFromWishlistListingNotOnWishlist() {
+        Listing listingDb = ListingDataBuilder.buildListing();
+        User user = UserDataBuilder.buildUser();
+
+        when(listingRepository.findById(anyInt()))
+                .thenReturn(Optional.of(listingDb));
+
+        when(authenticationFacade.getUserEmail())
+                .thenReturn(user.getEmail());
+
+        when(userRepository.findByEmail(any()))
+                .thenReturn(Optional.of(user));
+
+        listingService.removeListingFromWishlist(listingDb.getId());
+
+        verify(listingRepository, times(0)).save(any());
+    }
+
+    @DisplayName("Remove listing from user wishlist - success")
+    @Test
+    void removeListingFromWishlist() {
+        Listing listingDb = ListingDataBuilder.buildListing();
+        User user = UserDataBuilder.buildUser();
+        listingDb.addUserWishlist(user);
+
+        when(listingRepository.findById(anyInt()))
+                .thenReturn(Optional.of(listingDb));
+
+        when(authenticationFacade.getUserEmail())
+                .thenReturn(user.getEmail());
+
+        when(userRepository.findByEmail(any()))
+                .thenReturn(Optional.of(user));
+
+        listingService.removeListingFromWishlist(listingDb.getId());
+
+        verify(listingRepository).save(listingAc.capture());
+
+        Listing savedListing = listingAc.getValue();
+        assertFalse(savedListing.getUsersWhoAddedToWishlist().contains(user));
+        assertFalse(user.getWishlist().contains(savedListing));
     }
 }

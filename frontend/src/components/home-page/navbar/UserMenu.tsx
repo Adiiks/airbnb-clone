@@ -2,11 +2,10 @@ import styles from './navbar.module.css';
 import { IoMdMenu } from "react-icons/io";
 import { IoPersonCircle } from "react-icons/io5";
 import { useContext, useState } from 'react';
-import { createPortal } from 'react-dom';
 import ModalObject, { ModalType } from '../../../models/Modal';
 import Modal from '../../modals/Modal';
 import { AuthContext } from '../../../store/auth-context';
-import { Link, redirect, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const initialModalState: ModalObject = {
     showModal: false
@@ -103,10 +102,7 @@ const UserMenu = () => {
                     </div>
                 }
             </div>
-            {modal.showModal && createPortal(
-                <Modal type={modal.type!} onClose={handleCloseModalClick} />,
-                document.getElementById('root')!
-            )}
+            {modal.showModal && <Modal type={modal.type!} onClose={handleCloseModalClick} />}
         </>
     );
 }

@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { ModalType } from '../../models/Modal';
 import LoginModalBody from './LoginModalBody';
 import RegistrationModalBody from './RegistrationModalBody';
@@ -12,7 +13,7 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ type, onClose }) => {
     let modalBody;
 
-    switch(type) {
+    switch (type) {
         case ModalType.SIGN_UP: {
             modalBody = <RegistrationModalBody onClose={onClose} />;
             break;
@@ -24,6 +25,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose }) => {
     }
 
     return (
+        createPortal(
         <div id={styles["modal-background"]}>
             <div id={styles["modal-container"]}>
                 <div id={styles["modal-header"]}>
@@ -36,7 +38,8 @@ const Modal: React.FC<ModalProps> = ({ type, onClose }) => {
                     {modalBody}
                 </div>
             </div>
-        </div>
+        </div>,
+        document.getElementById('root')!)
     );
 }
 

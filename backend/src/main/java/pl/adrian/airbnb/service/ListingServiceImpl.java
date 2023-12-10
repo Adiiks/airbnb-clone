@@ -62,6 +62,38 @@ public class ListingServiceImpl implements ListingService {
         return convertListingsToListingsResponseList(listings, userEmail);
     }
 
+    @Transactional
+    @Override
+    public void addListingToWishlist(Integer listingId) {
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                        "Listing with id: " + listingId + " not found"));
+
+        User user = findUser(authFacade.getUserEmail());
+
+        if (listing.getUsersWhoAddedToWishlist().contains(user)) return;
+
+        listing.addUserWishlist(user);
+
+        listingRepository.save(listing);
+    }
+
+    @Transactional
+    @Override
+    public void removeListingFromWishlist(Integer listingId) {
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Listing with id: " + listingId + " not found"));
+
+        User user = findUser(authFacade.getUserEmail());
+
+        if (!listing.getUsersWhoAddedToWishlist().contains(user)) return;
+
+        listing.removeUserWishlist(user);
+
+        listingRepository.save(listing);
+    }
+
     private List<ListingResponse> convertListingsToListingsResponseList(List<Listing> listings, String userEmail) {
         if (userEmail == null) {
             return listings.stream()

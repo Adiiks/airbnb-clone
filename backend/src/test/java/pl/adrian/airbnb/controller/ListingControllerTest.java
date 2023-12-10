@@ -85,4 +85,18 @@ class ListingControllerTest {
 
         verify(listingService).getListingsByCategory(anyInt());
     }
+
+    @DisplayName("Add listing to wishlist")
+    @Test
+    void addListingToWishlist() throws Exception {
+        mockMvc.perform(put("/api/listings/wishlist/add/1"))
+                .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("Remove listing from wishlist")
+    @Test
+    void removeListingFromWishlist() throws Exception {
+        mockMvc.perform(put("/api/listings/wishlist/remove/1"))
+                .andExpect(status().isNoContent());
+    }
 }

@@ -11,4 +11,8 @@ public interface ListingService {
     void createListing(MultipartFile image, ListingRequest listing);
 
     List<ListingResponse> getListingsByCategory(Integer categoryId);
+
+    void addListingToWishlist(Integer listingId);
+
+    void removeListingFromWishlist(Integer listingId);
 }
