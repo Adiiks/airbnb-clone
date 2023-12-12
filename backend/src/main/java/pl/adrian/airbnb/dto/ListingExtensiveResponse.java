@@ -1,5 +1,7 @@
 package pl.adrian.airbnb.dto;
 
+import java.util.List;
+
 public record ListingExtensiveResponse(
         Integer id,
         String imageUrl,
@@ -8,6 +10,7 @@ public record ListingExtensiveResponse(
         ListingDetailsResponse listingDetails,
         String ownerName,
         AddressResponse address,
-        Integer price
+        Integer price,
+        List<ReservationResponse> reservations
 ) {
 }

@@ -11,8 +11,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import pl.adrian.airbnb.converter.ListingConverter;
+import pl.adrian.airbnb.converter.ReservationConverter;
 import pl.adrian.airbnb.data.CategoryDataBuilder;
 import pl.adrian.airbnb.data.ListingDataBuilder;
+import pl.adrian.airbnb.data.ReservationDataBuilder;
 import pl.adrian.airbnb.data.UserDataBuilder;
 import pl.adrian.airbnb.dto.*;
 import pl.adrian.airbnb.entity.*;
@@ -22,6 +24,7 @@ import pl.adrian.airbnb.repository.UserRepository;
 import pl.adrian.airbnb.security.AuthenticationFacade;
 import pl.adrian.airbnb.utils.ImageValidation;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +54,7 @@ class ListingServiceImplTest {
 
     ImageValidation imageValidation = new ImageValidation();
 
-    ListingConverter listingConverter = new ListingConverter();
+    ListingConverter listingConverter = new ListingConverter(new ReservationConverter());
 
     @Captor
     ArgumentCaptor<Listing> listingAc;
@@ -363,6 +366,9 @@ class ListingServiceImplTest {
     @Test
     void getListingById() {
         Listing listingDb = ListingDataBuilder.buildListing();
+        Reservation reservationDb = ReservationDataBuilder.buildReservation();
+        reservationDb.setCheckInDate(LocalDate.of(2023, 12, 11));
+        listingDb.addReservation(reservationDb);
 
         when(listingRepository.findById(anyInt()))
                 .thenReturn(Optional.of(listingDb));
@@ -370,5 +376,6 @@ class ListingServiceImplTest {
         ListingExtensiveResponse response =  listingService.getListingById(1);
 
         assertNotNull(response);
+        assertEquals("12/11/2023", response.reservations().get(0).checkInDate());
     }
 }

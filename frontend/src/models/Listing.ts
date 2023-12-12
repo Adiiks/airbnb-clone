@@ -1,5 +1,6 @@
 import Address from "./Address";
 import ListingBasicInfo from "./ListingBasicInfo";
+import Reservation from "./Reservation";
 
 export default interface Listing {
     id?: number,
@@ -11,5 +12,6 @@ export default interface Listing {
     price: number
     imageUrl?: string,
     ownerName?: string,
-    isOnUserWishlist?: boolean
+    isOnUserWishlist?: boolean,
+    reservations?: Reservation[]
 }

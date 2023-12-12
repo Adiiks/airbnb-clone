@@ -1,13 +1,19 @@
 package pl.adrian.airbnb.converter;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.adrian.airbnb.dto.*;
 import pl.adrian.airbnb.entity.Address;
 import pl.adrian.airbnb.entity.Listing;
 import pl.adrian.airbnb.entity.ListingDetails;
 
+import java.util.List;
+
 @Component
+@RequiredArgsConstructor
 public class ListingConverter {
+
+    private final ReservationConverter reservationConverter;
 
     public Listing convertListingRequestToListing(ListingRequest listingRequest) {
         return Listing.builder()
@@ -56,6 +62,11 @@ public class ListingConverter {
     }
 
     public ListingExtensiveResponse convertListingToListingExtensiveResponse(Listing listing) {
+        List<ReservationResponse> reservations = listing.getReservations()
+                .stream()
+                .map(reservationConverter::reservationToReservationResponse)
+                .toList();
+
         return new ListingExtensiveResponse(
                 listing.getId(),
                 listing.getImageUrl(),
@@ -64,7 +75,8 @@ public class ListingConverter {
                 convertListingDetailsToListingDetailsResponse(listing.getListingDetails()),
                 extractOwnerNameFromFullName(listing.getOwner().getFullName()),
                 convertAddressToAddressResponse(listing.getAddress()),
-                listing.getPrice()
+                listing.getPrice(),
+                reservations
         );
     }
 

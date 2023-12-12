@@ -6,10 +6,11 @@ type Props = {
     title: string
     defaultValue: number,
     minValue: number,
+    maxValue?: number
     onCounterChange: (action: CounterAction, counterTitle: string) => void
 }
 
-const CounterInput: React.FC<Props> = ({ title, defaultValue, minValue, onCounterChange }) => {
+const CounterInput: React.FC<Props> = ({ title, defaultValue, minValue, maxValue, onCounterChange }) => {
     return (
         <div className={styles['counter-input-container']}>
             <p>{title}</p>
@@ -24,6 +25,7 @@ const CounterInput: React.FC<Props> = ({ title, defaultValue, minValue, onCounte
                 <p>{defaultValue}</p>
                 <button
                     className={styles['counter-btn']}
+                    disabled={maxValue === undefined ? false : defaultValue > maxValue}
                     onClick={() => onCounterChange(CounterAction.INCREASE, title)}
                 >
                     <FiPlus />

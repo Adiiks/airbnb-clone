@@ -3,9 +3,7 @@ package pl.adrian.airbnb.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -52,6 +50,10 @@ public class Listing {
     @ManyToMany(mappedBy = "wishlist")
     private Set<User> usersWhoAddedToWishlist = new HashSet<>();
 
+    @OneToMany(mappedBy = "listing")
+    @OrderBy("checkInDate ASC")
+    private List<Reservation> reservations = new ArrayList<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,5 +77,15 @@ public class Listing {
     public void removeUserWishlist(User user) {
         this.usersWhoAddedToWishlist.remove(user);
         user.getWishlist().remove(this);
+    }
+
+    public void addReservation(Reservation reservation) {
+        this.reservations.add(reservation);
+        reservation.setListing(this);
+    }
+
+    public void removeReservation(Reservation reservation) {
+        this.reservations.remove(reservation);
+        reservation.setListing(null);
     }
 }
