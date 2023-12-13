@@ -8,4 +8,6 @@ import java.util.List;
 public interface ListingRepository extends JpaRepository<Listing, Integer> {
 
     List<Listing> findByCategory_Id(Integer id);
+
+    List<Listing> findByUsersWhoAddedToWishlist_Email(String email);
 }

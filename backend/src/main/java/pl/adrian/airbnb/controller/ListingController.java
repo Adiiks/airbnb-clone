@@ -52,4 +52,10 @@ public class ListingController {
     public void removeListingFromWishlist(@PathVariable Integer listingId) {
         listingService.removeListingFromWishlist(listingId);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/wishlist")
+    public List<ListingResponse> getListingsOnWishlist() {
+        return listingService.getListingsOnWishlist();
+    }
 }

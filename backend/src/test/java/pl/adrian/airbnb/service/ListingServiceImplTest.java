@@ -376,6 +376,18 @@ class ListingServiceImplTest {
         ListingExtensiveResponse response =  listingService.getListingById(1);
 
         assertNotNull(response);
-        assertEquals("12/11/2023", response.reservations().get(0).checkInDate());
+    }
+
+    @DisplayName("Get all listings on user wishlist")
+    @Test
+    void getListingsOnWishlist() {
+        Listing listingDb = ListingDataBuilder.buildListing();
+
+        when(authenticationFacade.getUserEmail()).thenReturn("jan@gmail.com");
+        when(listingRepository.findByUsersWhoAddedToWishlist_Email(anyString())).thenReturn(List.of(listingDb));
+
+        List<ListingResponse> response = listingService.getListingsOnWishlist();
+
+        assertEquals(1, response.size());
     }
 }

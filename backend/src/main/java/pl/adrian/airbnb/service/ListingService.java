@@ -18,4 +18,6 @@ public interface ListingService {
     void removeListingFromWishlist(Integer listingId);
 
     ListingExtensiveResponse getListingById(Integer listingId);
+
+    List<ListingResponse> getListingsOnWishlist();
 }

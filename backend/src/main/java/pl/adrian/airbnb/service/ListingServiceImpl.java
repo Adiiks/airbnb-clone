@@ -103,6 +103,16 @@ public class ListingServiceImpl implements ListingService {
         listingRepository.save(listing);
     }
 
+    @Override
+    public List<ListingResponse> getListingsOnWishlist() {
+        String userEmail = authFacade.getUserEmail();
+
+        return listingRepository.findByUsersWhoAddedToWishlist_Email(userEmail)
+                .stream()
+                .map(listing -> listingConverter.convertListingToListingResponse(listing, true))
+                .toList();
+    }
+
     private List<ListingResponse> convertListingsToListingsResponseList(List<Listing> listings, String userEmail) {
         if (userEmail == null) {
             return listings.stream()

@@ -108,4 +108,13 @@ class ListingControllerTest {
 
         verify(listingService).getListingById(anyInt());
     }
+
+    @DisplayName("Get list of listings on user wishlist")
+    @Test
+    void getListingsOnWishlist() throws Exception {
+        mockMvc.perform(get("/api/listings/wishlist"))
+                .andExpect(status().isOk());
+
+        verify(listingService).getListingsOnWishlist();
+    }
 }

@@ -6,6 +6,7 @@ import ListingCreation from "./components/listing-creation/ListingCreation";
 import { Toaster } from "react-hot-toast";
 import ListingPage from "./pages/ListingPage";
 import MyTripsPage from "./pages/MyTripsPage";
+import WishlistPage from "./pages/WishlistPage";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,13 @@ const router = createBrowserRouter([
     element:
       <ProtectedRoute>
         <MyTripsPage />
+      </ProtectedRoute>
+  },
+  {
+    path: '/wishlist',
+    element:
+      <ProtectedRoute>
+        <WishlistPage />
       </ProtectedRoute>
   }
 ]);

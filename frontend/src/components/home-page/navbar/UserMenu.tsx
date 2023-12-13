@@ -87,7 +87,7 @@ const UserMenu = () => {
                             <Link to={'/my-trips'}>Trips</Link>
                         </div>
                         <div className={styles["user-menu-item"]}>
-                            <a>Wishlist</a>
+                        <Link to={'/wishlist'}>Wishlist</Link>
                         </div>
                         <div className={styles["user-menu-item"]}>
                             <Link to={'/listing-creation'}>Airbnb your home</Link>
