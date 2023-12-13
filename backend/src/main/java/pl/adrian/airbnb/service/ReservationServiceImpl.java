@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.adrian.airbnb.converter.ReservationConverter;
 import pl.adrian.airbnb.dto.ReservationRequest;
+import pl.adrian.airbnb.dto.ReservationResponse;
 import pl.adrian.airbnb.entity.Listing;
 import pl.adrian.airbnb.entity.Reservation;
 import pl.adrian.airbnb.entity.User;
@@ -16,6 +17,7 @@ import pl.adrian.airbnb.repository.UserRepository;
 import pl.adrian.airbnb.security.AuthenticationFacade;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -60,6 +62,29 @@ public class ReservationServiceImpl implements ReservationService {
         newReservation.setListing(listing);
 
         reservationRepository.save(newReservation);
+    }
+
+    @Override
+    public List<ReservationResponse> getUserReservations() {
+        String userEmail = authenticationFacade.getUserEmail();
+
+        return reservationRepository.findByMadeByUser_Email(userEmail)
+                .stream()
+                .map(reservationConverter::reservationToReservationResponse)
+                .toList();
+    }
+
+    @Transactional
+    @Override
+    public void cancelReservation(Integer reservationId) {
+        String userEmail = authenticationFacade.getUserEmail();
+        Reservation reservation = reservationRepository.findByIdAndMadeByUser_Email(reservationId, userEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Reservation not found"));
+
+        reservation.getListing().removeReservation(reservation);
+
+        reservationRepository.delete(reservation);
     }
 
     private Integer calculateTotalPrice(Integer price, LocalDate checkInDate, LocalDate checkoutDate) {

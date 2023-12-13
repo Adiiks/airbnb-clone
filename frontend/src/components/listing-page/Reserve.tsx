@@ -10,6 +10,7 @@ import { AuthContext } from '../../store/auth-context';
 import axios from 'axios';
 import { backendUrl } from '../../global-proporties';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
     price: number,
@@ -27,6 +28,7 @@ const Reserve: React.FC<Props> = ({ price, reservations = [], maxGuests, listing
     const [reservation, setReservation] = useState<Reservation>(initialReservation);
 
     const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const unavailableDates = useMemo(() => {
         let dates: Date[] = [];
@@ -106,7 +108,7 @@ const Reserve: React.FC<Props> = ({ price, reservations = [], maxGuests, listing
             }
         })
         .then(() => {
-            //REDIRECT TO RESERVATIONS
+            navigate('/my-trips');
         })
         .catch(() => {
             toast.error('Selected dates are unavailable!');

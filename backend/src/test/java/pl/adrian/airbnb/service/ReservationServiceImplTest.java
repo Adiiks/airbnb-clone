@@ -14,6 +14,7 @@ import pl.adrian.airbnb.data.ListingDataBuilder;
 import pl.adrian.airbnb.data.ReservationDataBuilder;
 import pl.adrian.airbnb.data.UserDataBuilder;
 import pl.adrian.airbnb.dto.ReservationRequest;
+import pl.adrian.airbnb.dto.ReservationResponse;
 import pl.adrian.airbnb.entity.Listing;
 import pl.adrian.airbnb.entity.Reservation;
 import pl.adrian.airbnb.entity.User;
@@ -22,6 +23,7 @@ import pl.adrian.airbnb.repository.ReservationRepository;
 import pl.adrian.airbnb.repository.UserRepository;
 import pl.adrian.airbnb.security.AuthenticationFacade;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -134,5 +136,50 @@ class ReservationServiceImplTest {
         assertNotNull(reservation.getListing());
         assertNotNull(reservation.getMadeByUser());
         assertEquals(200, reservation.getTotalPrice());
+    }
+
+    @DisplayName("Get all user's reservations")
+    @Test
+    void getUserReservations() {
+        Reservation reservationDb = ReservationDataBuilder.buildReservation();
+
+        when(authenticationFacade.getUserEmail()).thenReturn("jan@wp.pl");
+        when(reservationRepository.findByMadeByUser_Email(anyString())).thenReturn(List.of(reservationDb));
+
+        List<ReservationResponse> response = reservationService.getUserReservations();
+
+        assertEquals(1, response.size());
+    }
+
+    @DisplayName("Cancel reservation - not found")
+    @Test
+    void cancelReservationNotFound() {
+        String userEmail = "jan@gmail.com";
+
+        when(authenticationFacade.getUserEmail()).thenReturn(userEmail);
+        when(reservationRepository.findByIdAndMadeByUser_Email(1, userEmail)).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () -> reservationService.cancelReservation(1));
+    }
+
+    @DisplayName("Cancel reservation - success")
+    @Test
+    void cancelReservation() {
+        String userEmail = "jan@gmail.com";
+        Reservation reservationDb = ReservationDataBuilder.buildReservation();
+        Listing listingDb = reservationDb.getListing();
+        listingDb.getReservations().add(reservationDb);
+
+        when(authenticationFacade.getUserEmail()).thenReturn(userEmail);
+        when(reservationRepository.findByIdAndMadeByUser_Email(1, userEmail)).thenReturn(Optional.of(reservationDb));
+
+        reservationService.cancelReservation(1);
+
+        verify(reservationRepository).delete(reservationAc.capture());
+
+        Reservation reservationBeforeDelete = reservationAc.getValue();
+
+        assertNull(reservationBeforeDelete.getListing());
+        assertEquals(0, listingDb.getReservations().size());
     }
 }

@@ -7,15 +7,16 @@ import React from 'react';
 
 type Props = {
     showCategories?: boolean,
-    fixedHeader?: boolean
+    fixedHeader?: boolean,
+    showSearchBar?: boolean
 }
 
-const Navbar: React.FC<Props> = ({ showCategories, fixedHeader }) => {
+const Navbar: React.FC<Props> = ({ showCategories, fixedHeader, showSearchBar }) => {
     return (
         <header className={fixedHeader ? styles['fixed-header'] : ''}>
             <div id={styles["main-bar"]}>
-                <Logo />
-                <SearchBar />
+                <Logo showLogoOnMobile={showSearchBar ? false : true} />
+                {showSearchBar && <SearchBar />}
                 <UserMenu />
             </div>
             {showCategories && <Categories />}
@@ -24,7 +25,8 @@ const Navbar: React.FC<Props> = ({ showCategories, fixedHeader }) => {
 }
 
 Navbar.defaultProps = {
-    showCategories: true
+    showCategories: true,
+    showSearchBar: true
 }
 
 export default Navbar;

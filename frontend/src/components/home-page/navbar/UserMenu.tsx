@@ -63,7 +63,7 @@ const UserMenu = () => {
                     <div id={styles["user-menu"]} onClick={handleMenuClick}>
                         <IoMdMenu size={20} />
                         {!authContext.auth ?
-                            <IoPersonCircle size={30} className={styles["default-user-icon"]} /> 
+                            <IoPersonCircle size={30} className={styles["default-user-icon"]} />
                             :
                             <div className={styles["user-icon"]}>
                                 {authContext.auth.fullName.charAt(0).toUpperCase()}
@@ -84,13 +84,10 @@ const UserMenu = () => {
                 {(openMenu && authContext.auth) &&
                     <div id={styles["open-menu"]}>
                         <div className={styles["user-menu-item"]}>
-                            <a>Trips</a>
+                            <Link to={'/my-trips'}>Trips</Link>
                         </div>
                         <div className={styles["user-menu-item"]}>
                             <a>Wishlist</a>
-                        </div>
-                        <div className={styles["user-menu-item"]}>
-                            <a>Your reservations</a>
                         </div>
                         <div className={styles["user-menu-item"]}>
                             <Link to={'/listing-creation'}>Airbnb your home</Link>

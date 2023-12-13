@@ -19,6 +19,7 @@ import pl.adrian.airbnb.service.ReservationService;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -67,5 +68,23 @@ class ReservationControllerTest {
                 .andExpect(status().isCreated());
 
         verify(reservationService).createReservation(any());
+    }
+
+    @DisplayName("Get all user's reservations")
+    @Test
+    void getUserReservations() throws Exception {
+        mockMvc.perform(get("/api/reservations"))
+                .andExpect(status().isOk());
+
+        verify(reservationService).getUserReservations();
+    }
+
+    @DisplayName("Cancel reservation based on id")
+    @Test
+    void cancelReservation() throws Exception {
+        mockMvc.perform(delete("/api/reservations/1"))
+                .andExpect(status().isNoContent());
+
+        verify(reservationService).cancelReservation(anyInt());
     }
 }

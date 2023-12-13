@@ -5,6 +5,9 @@ import java.time.LocalDate;
 public record ReservationResponse(
         Integer id,
         LocalDate checkInDate,
-        LocalDate checkoutDate
+        LocalDate checkoutDate,
+        Integer listingId,
+        String imageUrl,
+        AddressResponse address
 ) {
 }
