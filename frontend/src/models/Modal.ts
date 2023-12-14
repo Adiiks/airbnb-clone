@@ -10,5 +10,6 @@ export default class ModalObject {
 
 export enum ModalType {
     SIGN_UP = 'Sign up',
-    LOGIN = 'Log in'
+    LOGIN = 'Log in',
+    FILTERS = 'Filters'
 }

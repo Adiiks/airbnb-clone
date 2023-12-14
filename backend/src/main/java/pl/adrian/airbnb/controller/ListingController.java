@@ -29,7 +29,7 @@ public class ListingController {
     }
 
     @PreAuthorize("permitAll()")
-    @GetMapping("/category/{categoryId}")
+    @PostMapping("/category/{categoryId}")
     public List<ListingResponse> getListingsByCategory(@PathVariable Integer categoryId,
                                                        @Valid @RequestBody(required = false) ListingFilterDTO filter) {
         return listingService.getListingsByCategory(categoryId, filter);

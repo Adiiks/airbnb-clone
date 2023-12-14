@@ -82,7 +82,7 @@ class ListingControllerTest {
     @DisplayName("Get list of listing by category id without filters")
     @Test
     void getListingByCategoryWithoutFilters() throws Exception {
-        mockMvc.perform(get("/api/listings/category/1"))
+        mockMvc.perform(post("/api/listings/category/1"))
                 .andExpect(status().isOk());
 
         verify(listingService).getListingsByCategory(anyInt(), any());
@@ -93,7 +93,7 @@ class ListingControllerTest {
     void getListingByCategoryWithInvalidFilter() throws Exception {
         ListingFilterDTO filter = new ListingFilterDTO(null, "13-12-2023", "12312", null);
 
-        mockMvc.perform(get("/api/listings/category/1")
+        mockMvc.perform(post("/api/listings/category/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(filter)))
                 .andExpect(status().isBadRequest());
@@ -104,7 +104,7 @@ class ListingControllerTest {
     void getListingByCategoryWithFilters() throws Exception {
         ListingFilterDTO filter = new ListingFilterDTO(null, "2023-12-13", "2023-12-14", null);
 
-        mockMvc.perform(get("/api/listings/category/1")
+        mockMvc.perform(post("/api/listings/category/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(filter)))
                 .andExpect(status().isOk());

@@ -4,6 +4,7 @@ import LoginModalBody from './LoginModalBody';
 import RegistrationModalBody from './RegistrationModalBody';
 import styles from './modals.module.css';
 import { IoCloseOutline } from "react-icons/io5";
+import FiltersModalBody from './FiltersModalBody';
 
 interface ModalProps {
     type: ModalType,
@@ -20,6 +21,10 @@ const Modal: React.FC<ModalProps> = ({ type, onClose }) => {
         }
         case ModalType.LOGIN: {
             modalBody = <LoginModalBody onClose={onClose} />;
+            break;
+        }
+        case ModalType.FILTERS: {
+            modalBody = <FiltersModalBody onClose={onClose} />
             break;
         }
     }

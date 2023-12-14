@@ -1,17 +1,20 @@
 import { useSearchParams } from 'react-router-dom';
 import styles from './listings.module.css';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { backendUrl } from '../../../global-proporties';
 import toast from 'react-hot-toast';
 import Listing from '../../../models/Listing';
 import ListingItem from './ListingItem';
 import NoResults from './NoResults';
+import { FiltersContext } from '../../../store/filters-context';
 
 const ListingsList = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [listings, setListings] = useState<Listing[]>([]);
     const [showNoResults, setShowNoResults] = useState<boolean>(false);
+
+    const filtersContext = useContext(FiltersContext);
 
     useEffect(() => {
         const categoryId = searchParams.get('category');
@@ -19,11 +22,9 @@ const ListingsList = () => {
         if (categoryId === null) return;
 
         const url = `${backendUrl}/listings/category/${categoryId}`;
+        const body = filtersContext.filters ? filtersContext.filters : {};
 
-        axios({
-            method: 'get',
-            url: url,
-        })
+        axios.post(url, body)
             .then(({ data }) => {
                 if (data.length > 0) {
                     setListings(data);
@@ -35,7 +36,7 @@ const ListingsList = () => {
             .catch(() => {
                 toast.error('Something went wrong. Reload page!');
             });
-    }, [searchParams]);
+    }, [searchParams, filtersContext]);
 
     const listingsItems = listings.map((listing) =>
         <ListingItem key={listing.id} listing={listing} />
