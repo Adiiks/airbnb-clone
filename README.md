@@ -47,24 +47,38 @@ Here are the screenshots of diffrents parts of the application.
 ### Home page
 <img src="/screenshots/home-page.png">
 
-### Login
+### Registration
+<img src="/screenshots/registration.png">
 
 ### Filtering
+<img src="/screenshots/filters.png">
 
 ### Trips
+<img src="/screenshots/trips.png">
 
 ### Wishlist
+<img src="/screenshots/wishlist.png">
+
+### Listing details page
+<img src="/screenshots/listing-details.png">
 
 ### Post place for renting - step 1
+<img src="/screenshots/step1.png">
 
 ### Post place for renting - step 2
+<img src="/screenshots/step2.png">
 
 ### Post place for renting - step 3
+<img src="/screenshots/step3.png">
 
 ### Post place for renting - step 4
+<img src="/screenshots/step4.png">
 
 ### Post place for renting - step 5
+<img src="/screenshots/step5.png">
 
 ### Post place for renting - step 6
+<img src="/screenshots/step6.png">
 
 ### Post place for renting - step 7
+<img src="/screenshots/step7.png">

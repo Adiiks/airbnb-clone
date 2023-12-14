@@ -18,8 +18,8 @@ const TripItem: React.FC<Props> = ({ trip, onCancel }) => {
     }
 
     return (
-        <div className={styles['trip-item']} onClick={() => navigate(`/listing/${trip.listingId}`)}>
-            <img src={trip.imageUrl} alt="listing" />
+        <div className={styles['trip-item']}>
+            <img src={trip.imageUrl} alt="listing" onClick={() => navigate(`/listing/${trip.listingId}`)} />
             <p><strong>{`${trip.address?.city}, ${trip.address?.country}`}</strong></p>
             <p>{`${formatDate(trip.checkInDate!)} - ${formatDate(trip.checkoutDate!)}`}</p>
             <button onClick={() => onCancel(trip.id!)}>Cancel</button>
