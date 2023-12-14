@@ -1,8 +1,7 @@
 #listings-list-container {
     margin-top: 13rem;
+    margin-bottom: 1rem;
     padding: 0 4rem;
-    height: 685px;
-    overflow-y: auto;
 }
 
 #listings-list-wrapper {
