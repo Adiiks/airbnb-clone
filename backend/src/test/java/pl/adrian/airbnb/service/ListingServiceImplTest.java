@@ -188,7 +188,7 @@ class ListingServiceImplTest {
         when(authenticationFacade.getUserEmail())
                 .thenReturn(null);
 
-        List<ListingResponse> listings = listingService.getListingsByCategory(listingDb.getCategory().getId());
+        List<ListingResponse> listings = listingService.getListingsByCategory(listingDb.getCategory().getId(), null);
 
         assertEquals(1, listings.size());
 
@@ -222,7 +222,7 @@ class ListingServiceImplTest {
         when(authenticationFacade.getUserEmail())
                 .thenReturn(listingDb.getUsersWhoAddedToWishlist().iterator().next().getEmail());
 
-        List<ListingResponse> listings = listingService.getListingsByCategory(listingDb.getCategory().getId());
+        List<ListingResponse> listings = listingService.getListingsByCategory(listingDb.getCategory().getId(), null);
 
         assertEquals(1, listings.size());
 

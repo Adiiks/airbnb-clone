@@ -8,10 +8,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.adrian.airbnb.data.ListingDataBuilder;
+import pl.adrian.airbnb.dto.ListingFilterDTO;
 import pl.adrian.airbnb.dto.ListingRequest;
 import pl.adrian.airbnb.service.ListingService;
 
@@ -77,13 +79,37 @@ class ListingControllerTest {
         verify(listingService, times(0)).createListing(any(), any());
     }
 
-    @DisplayName("Get list of listing by category id")
+    @DisplayName("Get list of listing by category id without filters")
     @Test
-    void getListingByCategory() throws Exception {
+    void getListingByCategoryWithoutFilters() throws Exception {
         mockMvc.perform(get("/api/listings/category/1"))
                 .andExpect(status().isOk());
 
-        verify(listingService).getListingsByCategory(anyInt());
+        verify(listingService).getListingsByCategory(anyInt(), any());
+    }
+
+    @DisplayName("Get list of listing by category id with filters - wrong dates format")
+    @Test
+    void getListingByCategoryWithInvalidFilter() throws Exception {
+        ListingFilterDTO filter = new ListingFilterDTO(null, "13-12-2023", "12312", null);
+
+        mockMvc.perform(get("/api/listings/category/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(filter)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("Get list of listing by category id with filters")
+    @Test
+    void getListingByCategoryWithFilters() throws Exception {
+        ListingFilterDTO filter = new ListingFilterDTO(null, "2023-12-13", "2023-12-14", null);
+
+        mockMvc.perform(get("/api/listings/category/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(filter)))
+                .andExpect(status().isOk());
+
+        verify(listingService).getListingsByCategory(anyInt(), any());
     }
 
     @DisplayName("Add listing to wishlist")

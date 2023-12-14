@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import pl.adrian.airbnb.converter.ListingConverter;
 import pl.adrian.airbnb.dto.ListingExtensiveResponse;
+import pl.adrian.airbnb.dto.ListingFilterDTO;
 import pl.adrian.airbnb.dto.ListingRequest;
 import pl.adrian.airbnb.dto.ListingResponse;
 import pl.adrian.airbnb.entity.*;
@@ -15,6 +16,7 @@ import pl.adrian.airbnb.repository.CategoryRepository;
 import pl.adrian.airbnb.repository.ListingRepository;
 import pl.adrian.airbnb.repository.UserRepository;
 import pl.adrian.airbnb.security.AuthenticationFacade;
+import pl.adrian.airbnb.specification.ListingSpec;
 import pl.adrian.airbnb.utils.ImageValidation;
 
 import java.util.ArrayList;
@@ -55,10 +57,16 @@ public class ListingServiceImpl implements ListingService {
     }
 
     @Override
-    public List<ListingResponse> getListingsByCategory(Integer categoryId) {
+    public List<ListingResponse> getListingsByCategory(Integer categoryId, ListingFilterDTO filter) {
         String userEmail = authFacade.getUserEmail();
+        List<Listing> listings;
 
-        List<Listing> listings = listingRepository.findByCategory_Id(categoryId);
+         if (filter == null) {
+             listings = listingRepository.findByCategory_Id(categoryId);
+         } else {
+             ListingSpec spec = new ListingSpec(filter, categoryId);
+             listings = listingRepository.findAll(spec);
+         }
 
         return convertListingsToListingsResponseList(listings, userEmail);
     }
